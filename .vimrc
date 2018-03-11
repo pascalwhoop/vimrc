@@ -5,7 +5,7 @@ filetype off                  " required
 "vim customisations
 "------------------------------------------------------------
 set relativenumber
-set wildignore+=*/node_modules/*
+set wildignore+=*/node_modules/*,_site
 set encoding=utf-8
 "set spell
 "------------------------------------------------------------
@@ -35,7 +35,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 set number
 Plugin 'ctrlp.vim'
-Plugin 'lervag/vimtex'
+"Plugin 'lervag/vimtex'
 Plugin 'Valloric/YouCompleteMe'
 "snippets
 Plugin 'SirVer/ultisnips'
@@ -86,3 +86,7 @@ let g:tex_flavor='latex'
 "------------------------------------------------------------
 " LATEX END 
 "------------------------------------------------------------
+if filereadable("Session.vim")
+    echo "Restoring Session"
+    so Session.vim
+endif
