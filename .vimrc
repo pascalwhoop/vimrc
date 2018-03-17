@@ -145,7 +145,7 @@ let g:tex_flavor='latex'
 "------------------------------------------------------------
 syntax enable
 set background=dark
-let g:solarized_termcolors=256
+"let g:solarized_termcolors=256
 colorscheme solarized
 "------------------------------------------------------------
 " SOLARIZE END 
