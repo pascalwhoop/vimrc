@@ -6,7 +6,7 @@ filetype off                  " required
 "vim customisations and custom mappings
 "------------------------------------------------------------
 set relativenumber
-set wildignore+=*/node_modules/*,_site,*/venv/*
+set wildignore+=*/node_modules/*,_site,*/venv/*,*/target/*
 set encoding=utf-8
 "set spell
 
@@ -15,16 +15,19 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+vnoremap <C-c> "*y
+" jump through errors
+nnoremap <C-e> :lnext
 " Enable folding
-set foldmethod=indent
 set foldlevel=99
+set foldmethod=syntax
 " Enable folding with the spacebar
 nnoremap <space> za
 "pymode mappings
-"let g:pymode_rope_rename_bind = '<C-c>rr'
-"let g:pymode_rope_organize_imports_bind = '<C-c>ro'
-"let g:pymode_rope_extract_method_bind = '<C-c>rm'
-"let g:pymode_rope_extract_variable_bind = '<C-c>rl'
+let g:pymode_rope_rename_bind = '<C-c>rr'
+let g:pymode_rope_organize_imports_bind = '<C-c>ro'
+let g:pymode_rope_extract_method_bind = '<C-c>rm'
+let g:pymode_rope_extract_variable_bind = '<C-c>rl'
 "------------------------------------------------------------
 "vim customisations END
 "------------------------------------------------------------
@@ -41,7 +44,8 @@ call vundle#begin()
 " add vim plugins here
 "
 "Plugin 'lervag/vimtex'
-Plugin 'python-mode/python-mode'
+"Plugin 'python-mode/python-mode'
+Plugin 'davidhalter/jedi-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-syntastic/syntastic'
@@ -91,21 +95,27 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 " disable pymode linting because we use syntastic
-let g:pymode_lint_on_write = 0
-let g:pymode_rope_completion = 0
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1 "highlight python like crazy
+"let g:pymode_lint_on_write = 0
+"let g:pymode = 1
+"let g:pymode_options_max_line_length = 120 
+"let g:pymode_rope_completion = 1
+"let g:pymode_rope_complete_on_dot = 1
+"let g:pymode_rope_completion_bind = '<C-Space>'
+"let g:pymode_rope_autoimport = 1
+"let g:pymode_rope_autoimport_import_after_complete = 1
+"let g:pymode_syntax = 1
+"let g:pymode_syntax_all = 1 "highlight python like crazy
 
 
 "------------------------------------------------------------
 "vim custom functions
 "------------------------------------------------------------
-command SpellOn set spell spelllang=en_us
-command SpellOff set nospell
+command! SpellOn set spell spelllang=en_us
+command! SpellOff set nospell
 "command -nargs=1 PadRight <f-args>s/.*/\=printf('%-72s',submatch(0))
 "------------------------------------------------------------
 "vim custom functions END
@@ -113,6 +123,9 @@ command SpellOff set nospell
 
 "------------------------------------------------------------
 "let g:ycm_filetype_blacklist = {}
+let g:ycm_filetype_specific_completion_to_disable = {
+        \ 'gitcommit': 1
+        \}
 "------------------------------------------------------------
 " ultisnips SETUP 
 "------------------------------------------------------------
@@ -151,7 +164,14 @@ colorscheme solarized
 " SOLARIZE END 
 "------------------------------------------------------------
 " nerdtree
+let NERDTreeWinSize=26
 autocmd StdinReadPre * let s:std_in=1
+"ignore some files
+let NERDTreeIgnore=['\.vim$', '\~$', '\.log', '\.aux', '\.cls','\.aux', '\.bbl', '\.blg', '\.fls', '\.fdb\', '\.toc', '\.out', '\.glo', '\.log', '\.ist', '\.fdb_latexmk']
+
+"" close nerdtree on close
+autocmd VimLeave * NERDTreeClose
+"auto open nerdtree
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 map <C-n> :NERDTreeToggle<CR>
 " vim-easy-align setup
@@ -160,6 +180,9 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+"ctrlp show hidden files
+g:ctrlp_show_hidden=1
 
 "------------------------------------------------------------
 " FINAL IMPORT, nothing after this
