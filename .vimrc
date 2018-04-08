@@ -6,7 +6,7 @@ filetype off                  " required
 "vim customisations and custom mappings
 "------------------------------------------------------------
 set relativenumber
-set wildignore+=*/node_modules/*,_site,*/venv/*,*/target/*
+set wildignore+=*/node_modules/*,_site,*/__pycache__,*/venv/*,*/target/*,*/.vim$,\~$,*/.log,*/.aux,*/.cls,*/.aux,*/.bbl,*/.blg,*/.fls,*/.fdb*/,*/.toc,*/.out,*/.glo,*/.log,*/.ist,*/.fdb_latexmk
 set encoding=utf-8
 "set spell
 
@@ -46,6 +46,7 @@ call vundle#begin()
 "Plugin 'lervag/vimtex'
 "Plugin 'python-mode/python-mode'
 Plugin 'davidhalter/jedi-vim'
+Plugin 'powerman/vim-plugin-autosess'
 Plugin 'scrooloose/nerdtree'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-syntastic/syntastic'
@@ -59,7 +60,6 @@ Plugin 'honza/vim-snippets'
 Plugin 'abolish.vim'
 Plugin 'repeat.vim'
 Plugin 'surround.vim'
-Plugin 'altercation/vim-colors-solarized' "solarized theme
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -81,13 +81,13 @@ filetype plugin indent on    " required
 "------------------------------------------------------------
 "PYTHON COMPATIBILITY
 "------------------------------------------------------------
-au BufNewFile,BufRead *.py
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set textwidth=120
-set expandtab
-set autoindent
+"au BufNewFile,BufRead *.py
+"set tabstop=4
+"set softtabstop=4
+"set shiftwidth=4
+"set textwidth=120
+"set expandtab
+"set autoindent
 "set fileformat=unix
 
 set statusline+=%#warningmsg#
@@ -96,7 +96,7 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 2
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 " disable pymode linting because we use syntastic
 "let g:pymode_lint_on_write = 0
@@ -160,6 +160,7 @@ syntax enable
 set background=dark
 "let g:solarized_termcolors=256
 colorscheme solarized
+hi Normal ctermbg=NONE
 "------------------------------------------------------------
 " SOLARIZE END 
 "------------------------------------------------------------
@@ -167,7 +168,7 @@ colorscheme solarized
 let NERDTreeWinSize=26
 autocmd StdinReadPre * let s:std_in=1
 "ignore some files
-let NERDTreeIgnore=['\.vim$', '\~$', '\.log', '\.aux', '\.cls','\.aux', '\.bbl', '\.blg', '\.fls', '\.fdb\', '\.toc', '\.out', '\.glo', '\.log', '\.ist', '\.fdb_latexmk']
+let NERDTreeRespectWildIgnore=1
 
 "" close nerdtree on close
 autocmd VimLeave * NERDTreeClose
@@ -182,33 +183,33 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 "ctrlp show hidden files
-g:ctrlp_show_hidden=1
+let g:ctrlp_show_hidden=1
 
 "------------------------------------------------------------
 " FINAL IMPORT, nothing after this
 " from https://stackoverflow.com/a/31978241/1170940
 "------------------------------------------------------------
-function! MakeSession()
-  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-  if (filewritable(b:sessiondir) != 2)
-    exe 'silent !mkdir -p ' b:sessiondir
-    redraw!
-  endif
-  let b:filename = b:sessiondir . '/session.vim'
-  exe "mksession! " . b:filename
-endfunction
-
-function! LoadSession()
-  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-  let b:sessionfile = b:sessiondir . "/session.vim"
-  if (filereadable(b:sessionfile))
-    exe 'source ' b:sessionfile
-  else
-    echo "No session loaded."
-  endif
-endfunction
-
-" Adding automatons for when entering or leaving Vim
-au VimEnter * nested :call LoadSession()
-au VimLeave *  :call  MakeSession()
+"function! MakeSession()
+"  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+"  if (filewritable(b:sessiondir) != 2)
+"    exe 'silent !mkdir -p ' b:sessiondir
+"    redraw!
+"  endif
+"  let b:filename = b:sessiondir . '/session.vim'
+"  exe "mksession! " . b:filename
+"endfunction
+"
+"function! LoadSession()
+"  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+"  let b:sessionfile = b:sessiondir . "/session.vim"
+"  if (filereadable(b:sessionfile))
+"    exe 'source ' b:sessionfile
+"  else
+"    echo "No session loaded."
+"  endif
+"endfunction
+"
+"" Adding automatons for when entering or leaving Vim
+"au VimEnter * nested :call LoadSession()
+"au VimLeave *  :call  MakeSession()
 
